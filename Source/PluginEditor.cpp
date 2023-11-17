@@ -9,47 +9,52 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
 //==============================================================================
-GraphicsSampleTestAudioProcessorEditor::GraphicsSampleTestAudioProcessorEditor (GraphicsSampleTestAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+WaveformTestAudioProcessorEditor::WaveformTestAudioProcessorEditor(WaveformTestAudioProcessor& p)
+    : AudioProcessorEditor(&p), audioProcessor(p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (500, 500);
+    Timer::startTimer(120);
+    setSize(500, 300);
+    setResizable(false, false);
 }
 
-GraphicsSampleTestAudioProcessorEditor::~GraphicsSampleTestAudioProcessorEditor()
+WaveformTestAudioProcessorEditor::~WaveformTestAudioProcessorEditor()
 {
+    Timer::stopTimer();
 }
 
 //==============================================================================
-void GraphicsSampleTestAudioProcessorEditor::paint (juce::Graphics& g)
+void WaveformTestAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::lightblue);
-
-    g.setColour(juce::Colours::darkblue);
-    g.setFont(20.0f);
-    g.setFont(juce::Font("Times New Roman", 20.0f, juce::Font::italic));
-    g.drawText("Hello, World!", 20, 40, 200, 40, juce::Justification::centred, true);
-    g.setColour(juce::Colours::green);
-    g.drawLine(10, 300, 590, 300, 5);
-
-
-
-    juce::Rectangle<float> house(300, 120, 200, 170);
-    g.fillCheckerBoard(house, 30, 10, juce::Colours::sandybrown, juce::Colours::saddlebrown);
-    g.setColour(juce::Colours::yellow);
-    g.drawEllipse(530, 10, 60, 60, 3);
-
-  
-    
-
-  
+    // (Our component is opaque, so we must completely fill the background with a solid colour)
+    g.fillAll(juce::Colours::black);
+    paintHistogram(g);
 }
 
-void GraphicsSampleTestAudioProcessorEditor::resized()
+void WaveformTestAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+}
+
+void WaveformTestAudioProcessorEditor::timerCallback()
+{
+    repaint();
+}
+
+void WaveformTestAudioProcessorEditor::paintHistogram(juce::Graphics& g)
+{
+    int ampHeight = static_cast<int>(audioProcessor.mAmplitude * 300);
+
+    for (int i = 0; i < 499; i++) {
+        rectArray[i] = rectArray[i + 1];
+    }
+
+    rectArray[499] = ampHeight;
+    for (int i = 0; i < 500; i++) {
+        g.setColour(juce::Colours::lightgreen);
+        g.fillRect(i, 300 - rectArray[i], 1, rectArray[i]);
+    }
 }
