@@ -31,7 +31,7 @@ When a Plugin is made in Projucer it makes 4 source files
 
 
 SOLUTION EXPLORER
-Once indside of Visual Studio Code there will be four projects in the Solution Explorer
+Once inside of Visual Studio Code there will be four projects in the Solution Explorer
 
 
     graphicsSampleTest_SharedCode: This project contains the shared code between the standalone and plugin projects. It includes the PluginProcessor and PluginEditor classes, which are used to create the audio plugin. The shared code is compiled into a static library and linked to the other projects.
